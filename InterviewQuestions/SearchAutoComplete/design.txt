@@ -1,0 +1,174 @@
+Problem Statement
+
+Design a Search Autocomplete System for MakeMyTrip.
+
+When a user types in the search box (for example, city, hotel, airport, or landmark), the system should return top relevant suggestions in real time.
+
+📌 Functional Requirements
+
+As the user types characters, show autocomplete suggestions.
+
+Suggestions can include:
+Cities (Delhi, Mumbai)
+Airports (DEL, BOM)
+Hotels / landmarks
+
+Results should be ranked by relevance.
+Must support prefix-based search.
+Response time should be < 100 ms.
+
+📌 Non-Functional Requirements
+
+Highly low latency.
+Should scale to millions of searches/day.
+Read-heavy system.
+Should allow periodic updates (new hotels, popularity changes).
+
+📌 Constraints (Assume)
+
+~10 million searchable entities
+Avg query length: 3–10 characters
+Top K = 10 suggestions
+
+
+Now lets move on to the crux of the Problem:
+
+Functional Requirements:
+1. Prefix based search
+2. Initially we have ranking based on two frequency based and lexicographically.
+3. Default top 10 suggestions need to returned based on ranking.
+4. Words in the dictionary are dynamically added( word + their frequency)
+
+
+Core Entities:
+1. TrieNode
+2. Trie
+3. Suggestions
+4. IRankingStrategy
+5. FrequencyBasedStrategy implements IRankingStrategy
+6. LexicographicBasedStrategy implements IRankingStrategy
+7. AutocompleteSystem
+8. AutocompleteSystemBuilder
+9. AutocompletSystemDemo
+
+
+
+//will be writing some psudo code
+
+class TrieNode{
+    Map<Character, TreeNode> children;
+    boolean isEndOfWord;
+    int frequency;
+    //Getters and Setters
+}
+
+class Suggestion{
+    String word;
+    int weight;
+}
+
+class Trie{
+    TreiNode root;
+    
+    //TrieManaging ops
+    public void insert(string word, int weight);
+
+    //need to find a end of prefix from our trie given a prefix
+    public TrieNode searchPrefix(String prefix);
+
+    public List<Suggestion> collectSuggestions(TrieNode startNode, String prefix)
+
+    private void collect(TrieNode node, String currentPrefix, List<Suggestion> suggestions);
+}
+
+
+interface IRankingStrategy{
+    public List<Suggestion> rankSuggestions(List<Suggestion> suggestions); 
+}
+
+
+class LexicographicBasedStrategy implements IRankingStrategy
+{
+    @Override
+    public List<Suggestion> rankSuggestions(List<Suggestion> suggestions)
+    {
+        //sort in the alphabatical order
+    }
+}
+
+class FrequencyBasedStrategy implements IRankingStrategy
+{
+       @Override
+    public List<Suggestion> rankSuggestions(List<Suggestion> suggestions)
+    {
+        //sort in the order of suggestions weight
+    }
+}
+
+
+
+class AutocompleteSystem{
+      Trie trie;
+      IRankingStrategy rankingStrategy;
+      int maxSuggestions;
+
+      //constructor
+
+      public void addWord(String word);
+      public void addWords(List<String> words);
+
+      public List<String> getSuggestions(String prefix);
+}
+
+class AutocompleteSystemBuilder{
+    private IRankingStrategy rankingStrategy = new FrequencyBasedStrategy(); //Default
+    private int maxSuggestions = 10; //Default;
+
+    public AutocompleteSystemBuilder withRankingStrategy(IRankingStrategy rankingStrategy)
+    {
+        this.rankingStrategy = rankingStrategy;
+    }
+
+    public AutocompleteSystemBuilder withMaxSuggestions(int max)
+    {
+        this.maxSuggestions = max;
+    }
+
+    public AutocompleteSystem build()
+    {
+        return new AutocompleteSystem(rankingStrategy, maxSuggestions);
+    } 
+}
+
+
+class AutocompletSystemDemo{
+      
+      AutocompleteSystem autocompleteSystemWithFreq = new AutocompleteSystemBuilder()
+                                                            .withRankingStrategy(new FrequencyBasedStrategy())
+                                                            .withMaxSuggestions(10)
+                                                            .build();
+
+    List<String> dictionary; //intial dictionary which needed to be create a trie
+    autocompleteSystemWithFreq.addWords(dictionary);
+
+    String prefixToCheck;
+    List<Suggestion> results = autocompleteSystemWithFreq.getSuggestions(prefixToCheck);
+    //Print the results
+}
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
