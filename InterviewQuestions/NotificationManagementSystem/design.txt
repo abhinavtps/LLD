@@ -1,0 +1,51 @@
+1.1 Functional Requirements
+
+• The system should support sending notifications via EMAIL, SMS, and PUSH.
+• Each notification targets a single recipient and a specific channel.
+• The system should send notifications asynchronously.
+• If sending fails, the system should retry the operation a few times before giving up.
+• Notifications may contain a subject (optional) and a message body (mandatory).
+
+1.2 Non-Functional Requirements
+
+• The system should follow object-oriented design with clear separation of concerns.
+• It should be extensible, allowing future support for new notification types (e.g., WhatsApp, Slack).
+• Delivery should be non-blocking, using a thread pool to manage parallel sending.
+
+
+
+Core Entities:
+
+Enums:
+
+1. NotificationType -- it will be SMS, EMAIL, PUSH
+
+
+
+1. Recipient(Actual user which will recieve the message through the channels)
+2. Notification(Actual notification which needs to be sent to the recipient)
+2.5 NotificationBuilder
+3. NotificationChannel -- interface
+4. EmailNotificationChannel -- concrete implementation of NotificationChannel
+5. SmsNotificationChannel -- concrete implementation of NotificationChannel
+6. PushNotificationChannel -- concrete implementation of NotificationChannel
+7. RetryNotificationDecorator -- concrete decorator implementation of NotificationChannel
+7.5 NotificationChannelFactory -- class to generate different types of channels -- other way could be Factory-method pattern, but we can keep things simple here
+
+8. NotificationService -- the main service responsible for send the notification
+9. NotificationServiceDemo
+
+Key design pattern which can be used here:
+1. Decorator pattern -- for sending notification with retries
+2. Builder pattern -- Can be used for Notification object creation
+3. Factory pattern -- used to generate different type of NotificationChannels object
+4. Strategy Pattern -- used as different notification channel (combination of NotificationChannel + EmailNotificationChannel + SmsNotificationChannel + PushNotificationChannel)
+
+
+
+
+
+
+
+
+
