@@ -1,0 +1,64 @@
+Functional Requirements
+
+• Support basic inventory operations: add new items, update quantities, and remove stock.
+• Maintain stock levels per product, per warehouse.
+• Allow multiple warehouses, each with its own inventory tracking.
+• Enable setting and checking minimum stock thresholds for alerts.
+• Record a history of all inventory transactions, including timestamps and operation types.
+• Support viewing current stock levels by product and by warehouse.
+
+Non-Functional Requirements
+
+• Modularity: The system should follow object-oriented principles with well-separated components.
+• Consistency: Inventory updates should be accurate and reflect immediately across relevant views and reports.
+• Thread-Safety: The system must handle concurrent updates safely, especially when modifying stock quantities.
+• Extensibility: The design should support future enhancements like batch imports, barcoding, or serial number tracking.
+• Auditability: All operations should be logged for traceability and future analysis.
+• Maintainability: The code should be clean, testable, and easy to enhance.
+
+
+We have to identify the core entities
+1. Enum
+2. Data classes
+3. Core classes
+
+
+Core Entities
+
+Enum:
+1. OperationType -- it will be operations into the inventory
+like ADD, REMOVE, INITIAL_STOCK
+
+
+Data classes:
+1. Product -- dummy object to store the product details.
+2. Transaction -- class to have like (timestamp, productId, warehousId, quantity)
+
+
+Core classes:
+2. Warehouse -- a physical location where stock will be there, like (Product + their quantity + their thresholds)
+3. Inventory Manager -- this will be a like a public api which has all the exposed api's such that, how to add warehouses, add stock to warehouse, update stock in warehouse
+4. StockItem - it will be basically a unit for a product in a warehouse(productId, warehouseId, quantity, threshold).
+5. InventoryManagerDemo -- the demo class we can use to testing our InvetoryManager.
+6. AlertService -- to generate and handle alerts per inventory Transaction
+
+Interface:
+6. StockObserverInterface
+7. LowStockObserver (Concrete class)
+8. HighStockObserver (Concrete class)
+
+
+Now which Design patterns do we think we can have in this :
+1. Builder pattern -- why?? because we need to create multiple products everytime so better to have a builder.
+2. Factory pattern -- A simple factory which takes away the logic for product creation to a new class
+3. Singleton and Facade patterns are achieved by InvetoryManager class - as we need abstraction of all the inventory logic.
+4. Observer pattern -- we will have a interface LowStockObserver Interface and a concrete class to implement this interface, such that we can have a observer for the low stock
+
+
+
+
+
+
+
+
+
